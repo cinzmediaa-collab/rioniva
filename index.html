@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transforming Rioniva | CinzMedia</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Sora', 'sans-serif'],
+                    },
+                    colors: {
+                        dark: '#050505',
+                        panel: '#0f0f11',
+                        border: '#222222',
+                        brand: {
+                            light: '#a78bfa',
+                            DEFAULT: '#8b5cf6',
+                            dark: '#6d28d9',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base & Resets */
+        body {
+            background-color: #050505;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism Utilities */
+        .glass {
+            background: rgba(15, 15, 17, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .glass-warning {
+            background: rgba(40, 20, 0, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(251, 146, 60, 0.3);
+        }
+
+        .glass-pricing {
+            background: linear-gradient(145deg, rgba(15,15,17,1) 0%, rgba(20,10,35,1) 100%);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            box-shadow: 0 0 40px rgba(139, 92, 246, 0.1);
+        }
+
+        /* Background Effects */
+        .bg-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(139,92,246,0.15) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            top: -200px;
+            left: -200px;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        .bg-glow-right {
+            position: absolute;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(59,130,246,0.1) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            bottom: 0;
+            right: -300px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Text Gradients */
+        .text-gradient {
+            background: linear-gradient(to right, #ffffff, #a1a1aa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .text-gradient-brand {
+            background: linear-gradient(to right, #a78bfa, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Scroll Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050505;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Hover Effects */
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px -10px rgba(139, 92, 246, 0.2);
+            border-color: rgba(139, 92, 246, 0.4);
+        }
+
+        /* 3D Stack Animations */
+        .perspective-1000 { perspective: 1000px; }
+        .stack-layer-1 { transform: rotateX(50deg) rotateZ(-25deg) translateY(-80px) translateX(20px); animation: float1 5s ease-in-out infinite; }
+        .stack-layer-2 { transform: rotateX(50deg) rotateZ(-25deg) translateY(0px) translateX(0px); animation: float2 5s ease-in-out infinite 0.5s; }
+        .stack-layer-3 { transform: rotateX(50deg) rotateZ(-25deg) translateY(80px) translateX(-20px); animation: float3 5s ease-in-out infinite 1s; }
+
+        @keyframes float1 { 
+            0%, 100% { transform: rotateX(50deg) rotateZ(-25deg) translateY(-80px) translateX(20px); box-shadow: -10px 20px 30px rgba(0,0,0,0.5); } 
+            50% { transform: rotateX(50deg) rotateZ(-25deg) translateY(-95px) translateX(20px); box-shadow: -15px 30px 40px rgba(0,0,0,0.6); } 
+        }
+        @keyframes float2 { 
+            0%, 100% { transform: rotateX(50deg) rotateZ(-25deg) translateY(0px) translateX(0px); box-shadow: -10px 20px 30px rgba(139,92,246,0.1); } 
+            50% { transform: rotateX(50deg) rotateZ(-25deg) translateY(-15px) translateX(0px); box-shadow: -15px 30px 40px rgba(139,92,246,0.2); } 
+        }
+        @keyframes float3 { 
+            0%, 100% { transform: rotateX(50deg) rotateZ(-25deg) translateY(80px) translateX(-20px); box-shadow: -10px 20px 30px rgba(59,130,246,0.1); } 
+            50% { transform: rotateX(50deg) rotateZ(-25deg) translateY(65px) translateX(-20px); box-shadow: -15px 30px 40px rgba(59,130,246,0.2); } 
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-brand selection:text-white relative">
+
+    <div class="bg-glow"></div>
+    <div class="bg-glow-right fixed"></div>
+
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/916002736213" target="_blank" class="fixed bottom-6 right-6 bg-[#25D366] text-white p-4 rounded-full shadow-[0_0_20px_rgba(37,211,102,0.4)] hover:bg-[#1EBE5D] hover:scale-110 transition-all z-50 flex items-center justify-center group">
+        <i data-lucide="message-circle" class="w-7 h-7"></i>
+        <span class="absolute right-16 bg-panel text-white text-xs font-medium px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap border border-white/10 shadow-xl pointer-events-none">
+            Chat with CinzMedia
+        </span>
+    </a>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-40 glass border-b-0 border-white/5 top-0">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="font-display font-bold text-xl tracking-tight text-white flex items-center gap-2">
+                <i data-lucide="layers" class="w-6 h-6 text-brand"></i>
+                CinzMedia
+            </div>
+            <div class="text-sm font-medium text-gray-400">
+                Prepared exclusively for <span class="text-white">Rioniva</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- SECTION 1: HERO -->
+    <section class="min-h-screen flex items-center justify-center pt-20 px-6 relative overflow-hidden">
+        <div class="max-w-4xl mx-auto text-center z-10">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full glass text-xs font-medium text-brand-light mb-8 reveal hover:border-brand/50 transition-colors cursor-default">
+                <span class="w-2 h-2 rounded-full bg-brand animate-pulse"></span>
+                System Upgrade Proposal
+            </div>
+            <h1 class="font-display text-5xl md:text-7xl font-bold leading-tight mb-6 reveal delay-100">
+                Transforming Rioniva into a <br />
+                <span class="text-gradient-brand">Revenue Engine</span>
+            </h1>
+            <p class="text-xl text-gray-400 mb-10 max-w-2xl mx-auto reveal delay-200 leading-relaxed">
+                Phase 2: Full E-Commerce Infrastructure Upgrade. Transitioning from a static display to a fully automated, high-converting sales ecosystem.
+            </p>
+            <div class="reveal delay-300">
+                <a href="#warning" class="inline-flex items-center justify-center gap-2 bg-white text-black font-semibold px-8 py-4 rounded-full hover:bg-gray-200 transition-all duration-300 shadow-[0_0_30px_rgba(255,255,255,0.15)]">
+                    Explore the System <i data-lucide="arrow-down" class="w-4 h-4"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2: IMPORTANT NOTE (CRITICAL) -->
+    <section id="warning" class="py-20 px-6 relative z-10">
+        <div class="max-w-4xl mx-auto reveal">
+            <div class="glass-warning rounded-2xl p-8 md:p-10 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-1 h-full bg-orange-500"></div>
+                <div class="flex flex-col md:flex-row gap-6 items-start">
+                    <div class="bg-orange-500/20 p-3 rounded-xl animate-pulse">
+                        <i data-lucide="alert-triangle" class="w-8 h-8 text-orange-400"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-display text-2xl font-bold text-white mb-2">Phase 1 Completion & Pending Settlement</h2>
+                        <ul class="space-y-3 text-gray-300 mt-4">
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-green-400 shrink-0 mt-0.5"></i>
+                                <span>Phase 1 (Web Platform Development) is <strong>successfully completed and live.</strong></span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="wallet" class="w-5 h-5 text-orange-400 shrink-0 mt-0.5"></i>
+                                <span>As per our agreement, the pending balance of <strong>₹20,000 must be cleared.</strong></span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="lock" class="w-5 h-5 text-red-400 shrink-0 mt-0.5"></i>
+                                <span><strong>Please Note:</strong> No architecture or development work for Phase 2 will proceed without the settlement of Phase 1.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: PHASE 1 SUCCESS & EVOLUTION -->
+    <section class="py-24 px-6 border-t border-white/5">
+        <div class="max-w-4xl mx-auto text-center reveal">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand/10 text-xs font-medium text-brand border border-brand/20 mb-6">
+                Phase 1 Retrospective
+            </div>
+            <h2 class="font-display text-3xl md:text-5xl font-bold mb-8 text-gradient">A Premium Foundation Ready to Scale</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <div class="glass rounded-xl p-6 hover-lift">
+                    <i data-lucide="check-circle" class="w-8 h-8 text-green-400 mb-4 mx-auto"></i>
+                    <h3 class="font-bold mb-2">Beautiful Showcase</h3>
+                    <p class="text-sm text-gray-400">Phase 1 successfully established Rioniva's digital identity. The platform looks premium and reflects the brand perfectly.</p>
+                </div>
+                <div class="glass rounded-xl p-6 border-brand/20 shadow-[0_0_15px_rgba(139,92,246,0.1)] hover-lift">
+                    <i data-lucide="trending-up" class="w-8 h-8 text-brand-light mb-4 mx-auto"></i>
+                    <h3 class="font-bold mb-2 text-brand-light">Ready for Commerce</h3>
+                    <p class="text-sm text-gray-400">The current site does an amazing job driving high-intent traffic. The logical next step is converting them natively.</p>
+                </div>
+                <div class="glass rounded-xl p-6 hover-lift">
+                    <i data-lucide="zap" class="w-8 h-8 text-yellow-400 mb-4 mx-auto"></i>
+                    <h3 class="font-bold mb-2">Automating for Scale</h3>
+                    <p class="text-sm text-gray-400">Manual orders were great for validation. As your audience grows, automated architecture is needed to handle high volume seamlessly.</p>
+                </div>
+            </div>
+            <div class="inline-block glass border-brand/30 bg-brand/5 px-8 py-5 rounded-lg">
+                <p class="text-lg font-medium text-white">
+                    <span class="text-brand-light font-bold">The Evolution:</span> Phase 1 built your gorgeous digital showcase. Phase 2 turns it into a high-converting, automated engine.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: THE TRANSFORMATION -->
+    <section class="py-24 px-6 bg-panel/30 border-t border-white/5">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16 reveal">
+                <h2 class="font-display text-3xl md:text-5xl font-bold mb-4">The New Sales Architecture</h2>
+                <p class="text-gray-400 text-lg">This upgrade builds a complete, end-to-end automated system.</p>
+            </div>
+
+            <div class="flex flex-wrap justify-center items-center gap-4 md:gap-6 reveal delay-100">
+                <!-- Flow Items -->
+                <div class="glass px-6 py-4 rounded-full flex items-center gap-3 font-medium text-sm text-gray-300 border-white/10 hover:border-brand/50 transition-colors">
+                    <i data-lucide="mouse-pointer-click" class="w-4 h-4 text-brand"></i> Traffic
+                </div>
+                <i data-lucide="arrow-right" class="w-5 h-5 text-gray-600 hidden md:block"></i>
+                <div class="glass px-6 py-4 rounded-full flex items-center gap-3 font-medium text-sm text-gray-300 border-white/10 hover:border-brand/50 transition-colors">
+                    <i data-lucide="shopping-bag" class="w-4 h-4 text-brand"></i> Dynamic Cart
+                </div>
+                <i data-lucide="arrow-right" class="w-5 h-5 text-gray-600 hidden md:block"></i>
+                <div class="glass px-6 py-4 rounded-full flex items-center gap-3 font-medium text-sm text-white border-green-500/50 shadow-[0_0_20px_rgba(34,197,94,0.2)] bg-green-500/10 scale-105">
+                    <i data-lucide="shield-check" class="w-4 h-4 text-green-400"></i> Encrypted Payment
+                </div>
+                <i data-lucide="arrow-right" class="w-5 h-5 text-gray-600 hidden md:block"></i>
+                <div class="glass px-6 py-4 rounded-full flex items-center gap-3 font-medium text-sm text-gray-300 border-white/10 hover:border-brand/50 transition-colors">
+                    <i data-lucide="bot" class="w-4 h-4 text-brand"></i> Auto Fulfillment
+                </div>
+                <i data-lucide="arrow-right" class="w-5 h-5 text-gray-600 hidden md:block"></i>
+                <div class="glass px-6 py-4 rounded-full flex items-center gap-3 font-medium text-sm text-brand-light border-brand/30">
+                    <i data-lucide="trending-up" class="w-4 h-4"></i> Revenue Growth
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5 & 6: FEATURES DEEP DIVE -->
+    <section class="py-24 px-6 border-t border-white/5 relative">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="font-display text-3xl md:text-5xl font-bold mb-4 text-center reveal">Enterprise-Grade Features</h2>
+            <p class="text-gray-400 text-center mb-16 max-w-2xl mx-auto reveal">Detailed technical implementation required to run a secure and highly efficient e-commerce business.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Advanced Feature Cards -->
+                <div class="glass p-8 rounded-2xl hover-lift reveal">
+                    <div class="bg-brand/20 w-12 h-12 rounded-xl flex items-center justify-center mb-6 border border-brand/30">
+                        <i data-lucide="shopping-cart" class="text-brand-light"></i>
+                    </div>
+                    <h4 class="font-bold text-xl mb-3 text-white">State-Managed Cart</h4>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        Asynchronous cart functionality utilizing advanced state management. Eliminates page reloads for a frictionless, instantaneous checkout experience that drastically reduces drop-offs.
+                    </p>
+                </div>
+
+                <div class="glass p-8 rounded-2xl hover-lift reveal delay-100">
+                    <div class="bg-green-500/20 w-12 h-12 rounded-xl flex items-center justify-center mb-6 border border-green-500/30">
+                        <i data-lucide="credit-card" class="text-green-400"></i>
+                    </div>
+                    <h4 class="font-bold text-xl mb-3 text-white">Bank-Grade Gateway</h4>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        API integration with Razorpay handling complex tokenization and secure webhooks. Enables real-time settlements via UPI, Credit Cards, and Net Banking without storing sensitive data locally.
+                    </p>
+                </div>
+
+                <div class="glass p-8 rounded-2xl hover-lift reveal delay-200">
+                    <div class="bg-blue-500/20 w-12 h-12 rounded-xl flex items-center justify-center mb-6 border border-blue-500/30">
+                        <i data-lucide="database" class="text-blue-400"></i>
+                    </div>
+                    <h4 class="font-bold text-xl mb-3 text-white">Relational Orders</h4>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        Complex database architecture tracking the entire fulfillment lifecycle. Gives admins granular, real-time control over dispatch statuses, inventory deduction, and customer updates.
+                    </p>
+                </div>
+
+                <div class="glass p-8 rounded-2xl hover-lift reveal delay-300">
+                    <div class="bg-orange-500/20 w-12 h-12 rounded-xl flex items-center justify-center mb-6 border border-orange-500/30">
+                        <i data-lucide="mail" class="text-orange-400"></i>
+                    </div>
+                    <h4 class="font-bold text-xl mb-3 text-white">SMTP Automation</h4>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        Programmatic server-side triggers for transactional emails. Automatically fires order confirmations, shipping updates, and delivery alerts without manual admin intervention.
+                    </p>
+                </div>
+
+                <div class="glass p-8 rounded-2xl hover-lift reveal">
+                    <div class="bg-emerald-500/20 w-12 h-12 rounded-xl flex items-center justify-center mb-6 border border-emerald-500/30">
+                        <i data-lucide="receipt" class="text-emerald-400"></i>
+                    </div>
+                    <h4 class="font-bold text-xl mb-3 text-white">Algorithmic Invoicing</h4>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        Dynamic generation of GST-compliant PDF invoices upon successful transactions. Automatically calculates tax slabs, order totals, and shipping rates on the fly.
+                    </p>
+                </div>
+
+                <div class="glass p-8 rounded-2xl hover-lift reveal delay-100">
+                    <div class="bg-purple-500/20 w-12 h-12 rounded-xl flex items-center justify-center mb-6 border border-purple-500/30">
+                        <i data-lucide="shield" class="text-purple-400"></i>
+                    </div>
+                    <h4 class="font-bold text-xl mb-3 text-white">Encrypted Accounts</h4>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        Secure user sessions utilizing modern authentication protocols. Allows customers to safely save multiple addresses, view transaction history, and re-order easily.
+                    </p>
+                </div>
+
+                <div class="glass p-8 rounded-2xl hover-lift reveal delay-200">
+                    <div class="bg-pink-500/20 w-12 h-12 rounded-xl flex items-center justify-center mb-6 border border-pink-500/30">
+                        <i data-lucide="bar-chart-2" class="text-pink-400"></i>
+                    </div>
+                    <h4 class="font-bold text-xl mb-3 text-white">Business Intelligence</h4>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        A proprietary admin dashboard querying massive datasets instantly to provide a comprehensive overview of revenue trends, top-selling items, and platform metrics.
+                    </p>
+                </div>
+
+                <div class="glass p-8 rounded-2xl hover-lift reveal delay-300 border-brand/20">
+                    <div class="bg-red-500/20 w-12 h-12 rounded-xl flex items-center justify-center mb-6 border border-red-500/30">
+                        <i data-lucide="cpu" class="text-red-400"></i>
+                    </div>
+                    <h4 class="font-bold text-xl mb-3 text-white">High-Load Scalability</h4>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        Optimized server architecture designed to handle thousands of concurrent users during flash sales without site crashes or payment timeouts.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 7: WHY THIS IS COMPLEX -->
+    <section class="py-24 px-6 bg-panel/30 border-t border-white/5 relative overflow-hidden">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-16">
+            <div class="w-full md:w-1/2 reveal">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand/10 text-xs font-medium text-brand border border-brand/20 mb-6">
+                    Bespoke Development
+                </div>
+                <h2 class="font-display text-3xl md:text-5xl font-bold mb-6">Industry Standard Architecture</h2>
+                <p class="text-gray-300 text-lg mb-6 leading-relaxed">
+                    What looks like a simple <span class="text-white font-bold bg-white/10 px-2 py-1 rounded">"Buy Now"</span> button to the user requires a massive, complex orchestration of technologies in the background. 
+                </p>
+                <p class="text-gray-400 mb-8 leading-relaxed">
+                    This is <strong>not a simple WordPress or Shopify drag-and-drop website.</strong> It is a custom-coded, highly scalable web application designed to handle edge cases, protect financial data, and prevent concurrent transaction failures.
+                </p>
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-center gap-4 bg-black/40 p-3 rounded-lg border border-white/5"><i data-lucide="database" class="text-brand w-5 h-5"></i> <span class="text-sm font-medium">Relational Database Schemas & Queries</span></div>
+                    <div class="flex items-center gap-4 bg-black/40 p-3 rounded-lg border border-white/5"><i data-lucide="webhook" class="text-brand w-5 h-5"></i> <span class="text-sm font-medium">Real-time Webhook Listeners</span></div>
+                    <div class="flex items-center gap-4 bg-black/40 p-3 rounded-lg border border-white/5"><i data-lucide="shield-alert" class="text-brand w-5 h-5"></i> <span class="text-sm font-medium">Cross-Site Scripting (XSS) Protection</span></div>
+                </div>
+            </div>
+            
+            <div class="w-full md:w-1/2 relative reveal delay-100 min-h-[400px]">
+                <!-- Advanced 3D Visual Stack -->
+                <div class="relative w-full aspect-square max-w-[400px] mx-auto perspective-1000">
+                    <div class="absolute w-full h-40 bg-panel glass border border-white/10 rounded-2xl flex flex-col items-center justify-center z-30 stack-layer-1 backdrop-blur-xl">
+                        <i data-lucide="layout" class="w-8 h-8 text-gray-300 mb-2"></i>
+                        <span class="text-lg font-bold text-gray-300">Client Frontend (React/UI)</span>
+                    </div>
+                    <div class="absolute w-full h-40 bg-panel glass border border-brand/40 rounded-2xl flex flex-col items-center justify-center z-20 stack-layer-2 backdrop-blur-xl">
+                        <i data-lucide="cpu" class="w-8 h-8 text-brand-light mb-2"></i>
+                        <span class="text-lg font-bold text-brand-light">API & Middleware Logic</span>
+                    </div>
+                    <div class="absolute w-full h-40 bg-panel glass border border-blue-500/40 rounded-2xl flex flex-col items-center justify-center z-10 stack-layer-3 backdrop-blur-xl">
+                        <i data-lucide="database" class="w-8 h-8 text-blue-400 mb-2"></i>
+                        <span class="text-lg font-bold text-blue-400">Database & Security Layers</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 8: ADD-ON FEATURES (UPSELL) -->
+    <section class="py-24 px-6 border-t border-white/5">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-12 reveal">
+                <h2 class="font-display text-3xl font-bold mb-4">Future Scalability Modules</h2>
+                <p class="text-gray-400">These advanced, high-ticket features can be integrated at standard market rates as your revenue grows.</p>
+            </div>
+
+            <div class="space-y-4 reveal delay-100">
+                <div class="glass p-6 rounded-xl flex flex-col md:flex-row justify-between md:items-center gap-4 hover:border-brand/40 transition-colors group">
+                    <div>
+                        <h4 class="font-bold text-white flex items-center gap-2 text-lg"><i data-lucide="tag" class="w-5 h-5 text-brand"></i> Sales & Discount Engine</h4>
+                        <p class="text-sm text-gray-400 mt-2">Dynamic coupon logic, timed flash sales, and cart-value percentage algorithms.</p>
+                    </div>
+                    <div class="text-sm font-mono text-gray-300 bg-brand/10 border border-brand/20 px-4 py-2 rounded-lg group-hover:bg-brand/20 transition-colors">
+                        ₹15,000 – ₹25,000
+                    </div>
+                </div>
+                
+                <div class="glass p-6 rounded-xl flex flex-col md:flex-row justify-between md:items-center gap-4 hover:border-blue-400/40 transition-colors group">
+                    <div>
+                        <h4 class="font-bold text-white flex items-center gap-2 text-lg"><i data-lucide="bell" class="w-5 h-5 text-blue-400"></i> Push Notification System</h4>
+                        <p class="text-sm text-gray-400 mt-2">Server-sent events & browser alerts to recover abandoned carts directly on devices.</p>
+                    </div>
+                    <div class="text-sm font-mono text-gray-300 bg-blue-500/10 border border-blue-500/20 px-4 py-2 rounded-lg group-hover:bg-blue-500/20 transition-colors">
+                        ₹20,000 – ₹35,000
+                    </div>
+                </div>
+
+                <div class="glass p-6 rounded-xl flex flex-col md:flex-row justify-between md:items-center gap-4 hover:border-green-400/40 transition-colors group">
+                    <div>
+                        <h4 class="font-bold text-white flex items-center gap-2 text-lg"><i data-lucide="message-circle" class="w-5 h-5 text-green-400"></i> WhatsApp API Automation</h4>
+                        <p class="text-sm text-gray-400 mt-2">Official Meta API integration for instant invoice delivery and order tracking via WhatsApp.</p>
+                    </div>
+                    <div class="text-sm font-mono text-gray-300 bg-green-500/10 border border-green-500/20 px-4 py-2 rounded-lg group-hover:bg-green-500/20 transition-colors">
+                        ₹15,000 – ₹30,000
+                    </div>
+                </div>
+
+                <div class="glass p-6 rounded-xl flex flex-col md:flex-row justify-between md:items-center gap-4 hover:border-pink-400/40 transition-colors group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-pink-500/10 blur-[40px] rounded-full pointer-events-none"></div>
+                    <div>
+                        <h4 class="font-bold text-white flex items-center gap-2 text-lg"><i data-lucide="sparkles" class="w-5 h-5 text-pink-400"></i> AI Recommendation Engine</h4>
+                        <p class="text-sm text-gray-400 mt-2">Machine learning algorithm for "Frequently bought together" and personalized up-sells.</p>
+                    </div>
+                    <div class="text-sm font-mono text-gray-300 bg-pink-500/10 border border-pink-500/20 px-4 py-2 rounded-lg group-hover:bg-pink-500/20 transition-colors z-10">
+                        ₹45,000 – ₹80,000
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 9: INVESTMENT (VERY IMPORTANT) -->
+    <section class="py-24 px-6 bg-panel/30 border-t border-white/5 relative z-10">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-12 reveal">
+                <h2 class="font-display text-3xl font-bold mb-4">Phase 2 Financial Investment</h2>
+            </div>
+            
+            <div class="glass-pricing rounded-[2.5rem] p-10 md:p-16 flex flex-col items-center text-center relative overflow-hidden reveal">
+                <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAzNHYtNGgtdjRoLTR2LTRoLTR2LTRoLTR2LTRoLTR2LTRINHY0aDR2NGg0djRoNHY0aDR2NGg0djRoNHY0aDR2NGg0djRoNHY0aDR2NGg0djRoNHY0aDR2NGg0djRoNHY0SDB2LTRoNHYtNGg0di00aDR2LTRoNHYtNGg0di00aDRWMHoiIGZpbGw9IiM4YjVjZjYiIGZpbGwtb3BhY2l0eT0iMC4wNSIvPjwvZz48L3N2Zz4=')] opacity-50"></div>
+                <div class="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
+                    <i data-lucide="hexagon" class="w-48 h-48 animate-[spin_60s_linear_infinite]"></i>
+                </div>
+                
+                <h3 class="font-display text-xl font-semibold text-brand-light mb-6 uppercase tracking-[0.2em] relative z-10">Total Implementation Cost</h3>
+                
+                <div class="font-display text-7xl md:text-8xl font-bold text-white mb-8 drop-shadow-[0_0_30px_rgba(139,92,246,0.5)] relative z-10">
+                    ₹85,000
+                </div>
+                
+                <p class="text-xl text-gray-300 mb-8 max-w-2xl relative z-10">
+                    Complete E-Commerce Architecture Development, Payment Integration, and Security Implementation.
+                </p>
+                
+                <!-- Real Market Value Reminder -->
+                <div class="mt-8 p-6 rounded-2xl bg-black/60 border border-brand/20 text-left relative z-10 w-full backdrop-blur-md">
+                    <div class="flex items-start gap-4">
+                        <i data-lucide="info" class="w-6 h-6 text-brand-light shrink-0 mt-1"></i>
+                        <div>
+                            <p class="text-sm text-gray-300 leading-relaxed">
+                                <strong class="text-white">Industry Reality Check:</strong> To build a custom e-commerce web application with this level of security, bespoke UI, relational databases, and API structures, industry-standard development agencies currently charge between <strong class="text-brand-light bg-brand/10 px-2 py-0.5 rounded text-base">₹2,50,000 to ₹4,00,000</strong>.
+                            </p>
+                            <p class="text-xs text-gray-500 mt-2">
+                                We are executing this at a highly subsidized rate specifically because of our ongoing Phase 1 partnership with Rioniva.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 10: PAYMENT TERMS & CONDITIONS -->
+    <section class="py-24 px-6 border-t border-white/5">
+        <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">
+            
+            <!-- Execution Terms -->
+            <div class="reveal">
+                <h3 class="font-display text-3xl font-bold mb-8">Payment Schedule</h3>
+                
+                <div class="space-y-6">
+                    <div class="glass border-l-4 border-orange-500 p-5 rounded-r-xl">
+                        <h4 class="text-xs font-bold text-orange-400 uppercase tracking-wider mb-1 flex items-center gap-2">
+                            <i data-lucide="alert-circle" class="w-4 h-4"></i> Pre-Requisite
+                        </h4>
+                        <p class="text-white font-medium text-lg">Phase 1 Pending: ₹20,000</p>
+                        <p class="text-sm text-gray-400 mt-1">Required to initiate any Phase 2 planning or development.</p>
+                    </div>
+
+                    <div>
+                        <h4 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4 mt-8">Phase 2 Milestones</h4>
+                        <div class="space-y-3">
+                            <div class="glass p-5 rounded-xl flex flex-col md:flex-row justify-between md:items-center border border-white/5 hover:border-brand/30 transition-colors">
+                                <div>
+                                    <span class="text-white font-medium">1. Project Kickoff</span>
+                                    <p class="text-xs text-gray-500 mt-1">System design & database setup</p>
+                                </div>
+                                <span class="font-bold text-xl text-brand-light mt-2 md:mt-0">50% Advance</span>
+                            </div>
+                            <div class="glass p-5 rounded-xl flex flex-col md:flex-row justify-between md:items-center border border-white/5 hover:border-brand/30 transition-colors">
+                                <div>
+                                    <span class="text-white font-medium">2. API & Core Integration</span>
+                                    <p class="text-xs text-gray-500 mt-1">Payment gateways & backend logic built</p>
+                                </div>
+                                <span class="font-bold text-xl text-brand-light mt-2 md:mt-0">30% Midpoint</span>
+                            </div>
+                            <div class="glass p-5 rounded-xl flex flex-col md:flex-row justify-between md:items-center border border-white/5 hover:border-brand/30 transition-colors">
+                                <div>
+                                    <span class="text-white font-medium">3. Final Handover</span>
+                                    <p class="text-xs text-gray-500 mt-1">Stress testing passed & domain launch</p>
+                                </div>
+                                <span class="font-bold text-xl text-brand-light mt-2 md:mt-0">20% Deployment</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formal Terms -->
+            <div class="reveal delay-100 flex flex-col">
+                <h3 class="font-display text-3xl font-bold mb-8">Terms & Conditions</h3>
+                <div class="glass p-8 rounded-2xl h-full border border-white/10 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-bl-full pointer-events-none"></div>
+                    <ul class="space-y-6">
+                        <li class="flex items-start gap-4 text-sm text-gray-300">
+                            <i data-lucide="shield" class="w-5 h-5 text-brand shrink-0 mt-0.5"></i>
+                            <div>
+                                <strong class="text-white block mb-1">Strict Scope Boundary</strong>
+                                Any feature, API, or third-party integration not explicitly mentioned in this document is considered out-of-scope and will be billed as a separate add-on module.
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-4 text-sm text-gray-300">
+                            <i data-lucide="clock" class="w-5 h-5 text-brand shrink-0 mt-0.5"></i>
+                            <div>
+                                <strong class="text-white block mb-1">Timeline Dependencies</strong>
+                                The 30-day timeline is strictly dependent on timely feedback, approvals, and the provision of required API keys (Razorpay, SMTP) from the client's end. Delays from the client will extend the deadline.
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-4 text-sm text-gray-300">
+                            <i data-lucide="code-2" class="w-5 h-5 text-brand shrink-0 mt-0.5"></i>
+                            <div>
+                                <strong class="text-white block mb-1">Maintenance Window</strong>
+                                Post-launch, a 14-day bug-squashing period is provided free of charge. After this period, any server maintenance, design changes, or codebase adjustments will require a separate retainer or hourly billing.
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-4 text-sm text-gray-300">
+                            <i data-lucide="file-check" class="w-5 h-5 text-brand shrink-0 mt-0.5"></i>
+                            <div>
+                                <strong class="text-white block mb-1">Quotation Validity</strong>
+                                The pricing proposed in this document is valid for 10 days from presentation.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION 11: 30-DAY TIMELINE (REDESIGNED) -->
+    <section class="py-24 px-6 bg-panel/30 border-t border-white/5 relative">
+        <div class="max-w-5xl mx-auto">
+            <h2 class="font-display text-3xl md:text-5xl font-bold mb-4 text-center reveal">Development Roadmap</h2>
+            <p class="text-gray-400 text-center mb-16 max-w-2xl mx-auto reveal">A rigorous 30-day technical sprint to architect, build, secure, and launch.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative">
+                <!-- Central connection line for desktop -->
+                <div class="hidden md:block absolute top-0 bottom-0 left-1/2 w-px bg-gradient-to-b from-brand-light/10 via-brand/30 to-brand-light/10 -translate-x-1/2"></div>
+                
+                <!-- Phase 1 -->
+                <div class="glass p-8 rounded-2xl hover-lift reveal relative z-10 md:mt-0">
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
+                        <div class="w-12 h-12 shrink-0 rounded-full bg-brand/20 border border-brand/50 flex items-center justify-center text-brand-light font-bold text-xl shadow-[0_0_20px_rgba(139,92,246,0.3)]">
+                            01
+                        </div>
+                        <div>
+                            <h4 class="font-display font-bold text-2xl text-white">Architecture & UI</h4>
+                            <span class="text-brand-light font-mono text-xs font-bold tracking-widest uppercase">Days 1 - 7</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed">System design, database relationship schemas setup, UI/UX state management preparation, and building the asynchronous cart interfaces.</p>
+                </div>
+
+                <!-- Phase 2 -->
+                <div class="glass p-8 rounded-2xl hover-lift reveal delay-100 relative z-10 md:mt-16">
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
+                        <div class="w-12 h-12 shrink-0 rounded-full bg-blue-500/20 border border-blue-500/50 flex items-center justify-center text-blue-400 font-bold text-xl shadow-[0_0_20px_rgba(59,130,246,0.3)]">
+                            02
+                        </div>
+                        <div>
+                            <h4 class="font-display font-bold text-2xl text-white">Commerce Engine</h4>
+                            <span class="text-blue-400 font-mono text-xs font-bold tracking-widest uppercase">Days 8 - 14</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed">Programming core logic: order generation algorithms, cart state persistence, dynamic product rendering, and secure user session tokens.</p>
+                </div>
+
+                <!-- Phase 3 -->
+                <div class="glass p-8 rounded-2xl hover-lift reveal relative z-10 md:-mt-8">
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
+                        <div class="w-12 h-12 shrink-0 rounded-full bg-pink-500/20 border border-pink-500/50 flex items-center justify-center text-pink-400 font-bold text-xl shadow-[0_0_20px_rgba(236,72,153,0.3)]">
+                            03
+                        </div>
+                        <div>
+                            <h4 class="font-display font-bold text-2xl text-white">Secure Integrations</h4>
+                            <span class="text-pink-400 font-mono text-xs font-bold tracking-widest uppercase">Days 15 - 21</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed">Implementing Razorpay payment gateway, constructing secure webhooks to prevent spoofing, and setting up transactional SMTP email servers.</p>
+                </div>
+
+                <!-- Phase 4 -->
+                <div class="glass p-8 rounded-2xl hover-lift reveal delay-100 relative z-10 md:mt-8">
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
+                        <div class="w-12 h-12 shrink-0 rounded-full bg-green-500/20 border border-green-500/50 flex items-center justify-center text-green-400 font-bold text-xl shadow-[0_0_20px_rgba(34,197,94,0.3)]">
+                            04
+                        </div>
+                        <div>
+                            <h4 class="font-display font-bold text-2xl text-white">QA & Deployment</h4>
+                            <span class="text-green-400 font-mono text-xs font-bold tracking-widest uppercase">Days 22 - 30</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed">Intense load testing, vulnerability checks (XSS/SQLi), server provisioning, final bug squashing, domain connection, and public launch.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 12: FINAL CTA -->
+    <section class="py-32 px-6 relative overflow-hidden border-t border-white/5">
+        <div class="absolute inset-0 bg-brand/5"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-brand/20 blur-[150px] rounded-full pointer-events-none z-0"></div>
+        
+        <div class="max-w-4xl mx-auto text-center relative z-10 reveal">
+            <h2 class="font-display text-4xl md:text-6xl font-bold mb-6 text-white drop-shadow-lg">
+                Ready to Build the Engine?
+            </h2>
+            <p class="text-xl text-gray-300 mb-12 max-w-2xl mx-auto leading-relaxed">
+                If you agree with this proposed architecture, pricing, and 30-day timeline, we will proceed further and provide you with the exact formal quotation to begin.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
+                <a href="https://wa.me/916002736213" target="_blank" class="bg-white text-black font-bold text-lg px-10 py-5 rounded-full hover:bg-gray-200 hover:scale-105 transition-all duration-300 shadow-[0_0_40px_rgba(255,255,255,0.3)] flex items-center gap-3 w-full sm:w-auto justify-center">
+                    <i data-lucide="check-circle" class="w-5 h-5"></i>
+                    Yes, Send Formal Quote
+                </a>
+                <button onclick="window.scrollTo(0,0)" class="text-white font-medium text-lg px-10 py-5 rounded-full border border-white/20 hover:bg-white/10 transition-all duration-300 w-full sm:w-auto">
+                    Review Details
+                </button>
+            </div>
+            <p class="mt-10 text-sm text-gray-500 font-mono">Document prepared by CinzMedia Leadership.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 text-center border-t border-white/5 text-sm text-gray-600 bg-black relative z-10">
+        <p>&copy; 2026 CinzMedia. Highly Confidential Proposal for Rioniva.</p>
+    </footer>
+
+    <!-- Initialization Scripts -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Scroll Reveal Animation using Intersection Observer
+        document.addEventListener("DOMContentLoaded", () => {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, observerOptions);
+
+            const revealElements = document.querySelectorAll('.reveal');
+            revealElements.forEach(el => {
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>
